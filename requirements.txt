@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+psycopg2-binary
+celery
+redis
+pydantic
+pydantic-settings
+pytest
