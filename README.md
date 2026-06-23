@@ -82,17 +82,47 @@ celery -A app.services.redis.tasks worker --loglevel=info --pool=solo
 
 ## 🌐 API Endpoints
 
-Once running, navigate to `http://127.0.0.1:8000/docs` to view the interactive Swagger UI.
-
 ### `POST /api/v1/trigger-sync`
-Triggers an asynchronous background job to fetch the latest market data from all configured providers.
-* **Returns:** `202 Accepted` - `{"message": "Data sync triggered..."}`
+Triggers an asynchronous background job to fetch the latest market data from all configured providers. 
+* **Status:** `202 Accepted`
+* **Response:**
+```json
+{
+  "message": "Data sync triggered. Background workers are processing via Redis."
+}
+```
 
 ### `GET /api/v1/prices`
-Retrieves normalized market data directly from the PostgreSQL database.
+Retrieves normalized market data directly from the PostgreSQL database, ordered by the most recent timestamp.
 * **Parameters:** * `limit` (int, default=50): Number of records to return.
   * `offset` (int, default=0): Pagination offset.
-* **Returns:** `200 OK` - Array of `MarketDataResponse` JSON objects.
+* **Status:** `200 OK`
+* **Response:**
+```json
+[
+  {
+    "id": 1042,
+    "symbol": "IBM",
+    "price": 145.25,
+    "provider": "AlphaVantage",
+    "timestamp": "2026-06-23T08:15:30.123456Z"
+  },
+  {
+    "id": 1041,
+    "symbol": "BITCOIN",
+    "price": 64230.50,
+    "provider": "CoinGecko",
+    "timestamp": "2026-06-23T08:15:28.987654Z"
+  },
+  {
+    "id": 1040,
+    "symbol": "USD/EUR",
+    "price": 0.92,
+    "provider": "ExchangeRateAPI",
+    "timestamp": "2026-06-23T08:15:27.112233Z"
+  }
+]
+```
 
 ## 🧪 Testing
 
